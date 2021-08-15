@@ -63,75 +63,68 @@ export default {
       cacheTodo: {},
       cacheTitle: "",
       visibility: "all",
-      data: JSON.parse(localStorage.getItem("listData")) || [],
+      data: JSON.parse(localStorage.getItem("listData")) || []
     };
   },
   methods: {
-    addTodo() {
-      let vm = this;
-      let value = vm.newTodo.trim();
-      let timestamp = Math.floor(Date.now());
+    addTodo () {
+      let value = this.newTodo.trim();
+      let timestamp = new Date().getTime();
       if (!value) {
         return;
       }
       let todo = {
         id: timestamp,
         title: value,
-        completed: false,
+        completed: false
       };
-      vm.data.push(todo);
-      localStorage.setItem("listData", JSON.stringify(vm.data));
-      vm.newTodo = "";
+      this.data.push(todo);
+      localStorage.setItem("listData", JSON.stringify(this.data));
+      this.newTodo = "";
     },
-    removeTodo(todo) {
+    removeTodo (todo) {
       let newTodos = "";
-      let vm = this;
-      vm.data.forEach(function (item, key) {
+      this.data.forEach((item, key) => {
         if (todo.id === item.id) {
           newTodos = key;
         }
       });
-      vm.data.splice(newTodos, 1);
-      localStorage.setItem("listData", JSON.stringify(vm.data));
+      this.data.splice(newTodos, 1);
+      localStorage.setItem("listData", JSON.stringify(this.data));
     },
-    setCompleted(item) {
-      let vm = this;
-      vm.data.forEach(function (items) {
+    setCompleted (item) {
+      this.data.forEach((items) => {
         if (item.id === items.id) {
           item.completed = !item.completed;
         }
       });
-      localStorage.setItem("listData", JSON.stringify(vm.data));
+      localStorage.setItem("listData", JSON.stringify(this.data));
     },
-    editTodo(item) {
-      let vm = this;
-      vm.cacheTodo = item;
-      vm.cacheTitle = item.title;
+    editTodo (item) {
+      this.cacheTodo = item;
+      this.cacheTitle = item.title;
     },
-    cancelEdit() {
-      let vm = this;
-      vm.cacheTodo = {};
+    cancelEdit () {
+      this.cacheTodo = {};
     },
-    doneEdit(item) {
-      let vm = this;
+    doneEdit (item) {
       item.title = this.cacheTitle;
-      localStorage.setItem("listData", JSON.stringify(vm.data));
-      vm.cacheTitle = "";
-      vm.cacheTodo = {};
+      localStorage.setItem("listData", JSON.stringify(this.data));
+      this.cacheTitle = "";
+      this.cacheTodo = {};
     },
-    clearAll() {
-      let vm = this;
-      vm.data = [];
-      localStorage.setItem("listData", JSON.stringify(vm.data));
-    },
+    clearAll () {
+      this.data = [];
+      localStorage.setItem("listData", JSON.stringify(this.data));
+    }
   },
   computed: {
-    filteredTodos() {
+    filteredTodos () {
       if (this.visibility == "all") {
         return this.data;
       } else if (this.visibility === "active") {
         let newTodos = [];
-        this.data.forEach(function (item) {
+        this.data.forEach((item) => {
           if (!item.completed) {
             newTodos.push(item);
           }
@@ -139,7 +132,7 @@ export default {
         return newTodos;
       } else if (this.visibility === "completed") {
         let newTodos = [];
-        this.data.forEach(function (item) {
+        this.data.forEach((item) => {
           if (item.completed) {
             newTodos.push(item);
           }
@@ -147,16 +140,16 @@ export default {
         return newTodos;
       }
     },
-    undone: function () {
+    undone () {
       let allDoneTodos = [];
-      this.data.forEach(function (item) {
+      this.data.forEach((item) => {
         if (item.completed === false) {
           allDoneTodos.push(item);
         }
       });
       return allDoneTodos.length;
-    },
-  },
+    }
+  }
 };
 </script>
 
